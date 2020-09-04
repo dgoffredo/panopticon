@@ -1,0 +1,25 @@
+
+body {
+  margin: 0px;
+}
+
+.cassette {
+  height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 1fr;
+  flex: auto
+}
+
+.cassette > button {
+  font-size: 10vmin;
+}
+
+/* button:focus and button:active based on:
+    https://stackoverflow.com/a/38377286
+*/
+.selected {
+  background: #e5ffe5;
+  outline: none;
+  box-shadow: inset 0px 0px 5px #c1c1c1;
+}
