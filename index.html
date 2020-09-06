@@ -1,20 +1,40 @@
 <html>
 
 <head>
-    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-    <meta content="utf-8" http-equiv="encoding">
+    <meta content='text/html;charset=utf-8' http-equiv='Content-Type'>
+    <meta content='utf-8' http-equiv='encoding'>
 
     <title>Launch Panopticon</title>
-    <script language="javascript" src="index.js"></script>
+    <script language='javascript' src='index.js'></script>
 </head>
 
 <body>
-    <img src="big_brother.jpg" style="float: right; width: 200px;" />
+    <img src='images/big_brother.jpg' style='float: right; width: 200px;' />
     <h1>Panopticon</h1>
     <p>Get back to work.</p>
-    <h2>Work Status Indicator</h2>
+    <h2>Status Indicator</h2>
     <p>
-        <button type="button" onclick="launchStatusIndicator()">Launch Popup</button>
+        <form name='launchPopup' id='launchPopup' method='post' action='/launch'>
+          <div>
+            <label>Width (pixels): <input name='width' type='number' /></label>
+          </div>
+          <div>
+            <label>Height (pixels): <input name='height' type='number' /></label>
+          <div>
+          <div>
+            <label>From Left (pixels): <input name='left' type='number' /></label>
+          </div>
+          <div>
+            <label>From Top (pixels): <input name='top' type='number' /></label>
+          <div>
+            <label>Open Automatically: <input type='checkbox' name='openAutomatically'/></label>
+          </div>
+          <div>
+            <button>
+              Launch Popup
+            </button>
+          </div>
+        </form>
     </p>
     <h2>Export Data</h2>
     <p>TODO: form to select data range, format, etc. and then download</p>
