@@ -7,10 +7,26 @@ import json
 import urllib.parse
 
 
+def debug(*args, **kwargs):
+    return print(*args, **kwargs)
+
+
 class RequestHandler(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        debug('requestline:', self.requestline)
+        debug('path:', self.path)
+
+        # Route some special endpoints. Otherwise forward to the file-serving
+        # implementation.
+        if self.path == '/launch':
+            return self.handle_GET_launch()
+        # TODO: more handlers
+
+        return super().do_GET()
+
     def do_POST(self):
-        print('requestline:', self.requestline)
-        print('path:', self.path)
+        debug('requestline:', self.requestline)
+        debug('path:', self.path)
 
         # /foo/bar/baz -> foo
         toplevel = self.path[1:].split('/')[0]
@@ -23,12 +39,19 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         content_length = int(self.headers.get('Content-Length', 0))
 
         input_payload = self.rfile.read(content_length)
-        print('raw payload:', input_payload)
+        debug('raw payload:', input_payload)
         parsed_input = urllib.parse.parse_qs(input_payload.decode('utf8'))
-        print('parsed payload:', parsed_input)
+        debug('parsed payload:', parsed_input)
 
-        # TODO: Save the settings, pick defaults for missing settings, return the settings.
-        output_payload = json.dumps(parsed_input).encode('utf8') # TODO
+        storage.update_popup_settings(parsed_input)
+        self.send_popup_settings()
+
+    def handle_GET_launch(self):
+        self.send_popup_settings()
+
+    def send_popup_settings(self):
+        output_dict = storage.select_popup_settings()
+        output_payload = json.dumps(output_dict).encode('utf8')
 
         self.send_response(200)
         self.send_header('Content-Type', 'application/JSON')

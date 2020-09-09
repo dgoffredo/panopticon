@@ -2,11 +2,17 @@
 -- activity popup window. If there are no rows, then use defaults. If there
 -- are rows, then use the most recent (largest insertISO8601).
 create table if not exists PopupSettings(
-    insertISO8601 text not null primary key,  -- server time
-    widthPixels integer,
-    heightPixels integer,
+    -- ISO8601 in UTC, but without the time zone suffix
+    inserted text not null primary key,
+    widthPixels integer, -- width of the popup window, in pixels
+    heightPixels integer, -- height of the popup window, in pixels
+    -- distance, in pixels, between the left of the screen and the left side of
+    -- the popup window
     leftPixels integer,
-    rightPixels integer,
+    -- distance, in pixels, between the top of the screen and the top of
+    -- the popup window
+    topPixels integer,
+    -- whether to launch the popup whenever the site is loaded
     launchAutomatically boolean);
 
 -- EventType enumerates the possible types of events.
@@ -44,7 +50,8 @@ insert or ignore into Activity(name, description) values
 -- each activity state can be calculated. The result of that calculation is not
 -- stored in this database. Only the events are stored.
 create table if not exists Event(
-    insertISO8601 text not null primary key, -- server time
+    -- ISO8601 in UTC, but without the time zone suffix
+    inserted text not null primary key,
     type text not null references EventType(name),
     -- activityAfter is the activity status that the user is in now that the
     -- event has occurred.
