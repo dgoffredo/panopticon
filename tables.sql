@@ -34,7 +34,7 @@ insert or ignore into Activity(name, description) values
     ('research', 'reading code, reading documentation, experimenting with tools, etc.'),
     ('coding', 'writing code, testing and debugging, and writing documentation'),
     ('break', 'not working'),
-    ('review', 'reviewing someone else''s code, or responding to review feedback')
+    ('review', 'reviewing someone else''s code, or responding to review feedback'),
     ('paperwork', 'project management tools (e.g. Jira), sysadmin requests, etc.'),
     ('meeting', 'in a scheduled meeting');
 
