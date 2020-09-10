@@ -19,6 +19,7 @@ def database():
     db = sqlite3.connect(db_path)
     script_sql = init_script_path.read_text()
     db.executescript(script_sql)
+    db.execute("pragma foreign_keys = on")
 
     _database_connection = db
     return db
@@ -102,4 +103,14 @@ def select_events(begin_datetime, end_datetime):
 
 
 def insert_event(type_name, activity_name):
-    """TODO"""
+    db = database()
+    statement = """
+    insert into Event(inserted, type, activityAfter)
+    values(?, ?, ?)
+    """
+
+    # Keep the "naive" part of the UTC datetime, but ditch the zone.
+    inserted = datetime.now(timezone.utc).replace(tzinfo=None)
+
+    db.execute(statement, (inserted, type_name, activity_name))
+    db.commit()

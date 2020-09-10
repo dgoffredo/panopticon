@@ -92,12 +92,18 @@ document.addEventListener('DOMContentLoaded', async function () {
     // It would be cleaner to have this pre-populated from the initial GET,
     // but then the server would have to do more than serve a static file.
     // Instead, this.
-    const response = await fetch('/launch');
-    const popupSettings = await response.json();
-    console.log('GET /popup response: ', popupSettings);
-    fillPopupSettingsForm(popupSettingsForm, popupSettings);
-    if (popupSettings.openAutomatically) {
-        launchStatusIndicator(popupSettings);
+    try {
+        const response = await fetch('/launch');
+        const popupSettings = await response.json();
+        console.log('GET /popup response: ', popupSettings);
+        fillPopupSettingsForm(popupSettingsForm, popupSettings);
+        if (popupSettings.openAutomatically) {
+            launchStatusIndicator(popupSettings);
+        }
+    }
+    catch (error) {
+        console.error(error);
+        alert('Error fetching launch settings. See log.\n' + error);
     }
 
     // Set a handler for the "Launch Popup" form's submission.

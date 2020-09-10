@@ -11,15 +11,17 @@
 
 <body>
   <div class="cassette">
-    <button type="button" title="Firefighting" onclick="onClick(this)">🔥</button>
-    <button type="button" title="Triaging Issue" onclick="onClick(this)">🔍</button>
-    <button type="button" title="Discussion" onclick="onClick(this)">🗣️</button>
-    <button type="button" title="Researching" onclick="onClick(this)">📚</button>
-    <button type="button" title="Coding/Testing/Debugging/Documenting" onclick="onClick(this)"><code>&lt;&gt;</code></button>
-    <button type="button" title="Break" onclick="onClick(this)">☕ </button>
-    <button type="button" title="Code Review" onclick="onClick(this)">✅</button>
-    <button type="button" title="Paperwork" onclick="onClick(this)">📝</button>
-    <button type="button" title="Meeting" onclick="onClick(this)">📅</button>
+    <!-- The "name" attribute of each button is mapped to the corresponding
+         activity name in the API (currently they're equivalent) -->
+    <button type="button" name="firefighting" title="Firefighting" onclick="onClick(this)">🔥</button>
+    <button type="button" name="triaging" title="Triaging Issue" onclick="onClick(this)">🔍</button>
+    <button type="button" name="discussion" title="Discussion" onclick="onClick(this)">🗣️</button>
+    <button type="button" name="research" title="Researching" onclick="onClick(this)">📚</button>
+    <button type="button" name="coding" title="Coding/Testing/Debugging/Documenting" onclick="onClick(this)"><code>&lt;&gt;</code></button>
+    <button type="button" name="break" title="Break" onclick="onClick(this)">☕ </button>
+    <button type="button" name="review" title="Code Review" onclick="onClick(this)">✅</button>
+    <button type="button" name="paperwork" title="Paperwork" onclick="onClick(this)">📝</button>
+    <button type="button" name="meeting" title="Meeting" onclick="onClick(this)">📅</button>
   </div>
 </body>
 
