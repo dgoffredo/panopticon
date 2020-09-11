@@ -37,7 +37,17 @@
         </form>
     </p>
     <h2>Export Data</h2>
-    <p>TODO: form to select data range, format, etc. and then download</p>
+    <p>
+      <form name='download' method='get' action='/csv'>
+        <div>
+          <label>From <input name='from' type='date' /></table>
+          <label>to <input name='to' type='date' /></label>
+        </div>
+        <div>
+          <button>Download CSV</button>
+        </div>
+      </form>
+    </p>
 </body>
 
 </html>

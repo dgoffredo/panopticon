@@ -4,6 +4,7 @@ import storage
 
 import http.server
 import json
+import re
 import urllib.parse
 
 
@@ -26,8 +27,8 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         debug('path:', self.path)
         debug('http_method:', http_method)
 
-        # /foo/bar/baz -> foo
-        toplevel = self.path[1:].split('/')[0]
+        # /foo/bar/baz?chicken=feet  ->  foo
+        toplevel = re.split(r'[/?]', self.path[1:])[0]
 
         # Each supported endpoint has a handler method on this object.
         method_name = f'handle_{http_method}_{toplevel}'
@@ -59,6 +60,11 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         storage.update_popup_settings(parsed_input)
         storage.insert_event(type_name='launchPopup', activity_name='none')
         self.send_popup_settings()
+
+    def handle_GET_csv(self):
+        print('TODO: print the things')
+        self.send_response(200)
+        self.end_headers()
 
     def handle_GET_launch(self):
         self.send_popup_settings()
