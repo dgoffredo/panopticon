@@ -1,9 +1,11 @@
 'use strict';
 
-
 // When this popup is closing, POST to the server for the record.
 window.addEventListener('unload', function () {
-   navigator.sendBeacon('/close');
+    // `sendBeacon` was invented to solve the problem of "I want to send a
+    // one-way request to the server on close and I don't want it to be
+    // cancelled even though the page is shutting down."
+    navigator.sendBeacon('/close');
 });
 
 async function postActivity(activityName) {

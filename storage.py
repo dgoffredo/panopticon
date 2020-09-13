@@ -1,6 +1,21 @@
-from datetime import datetime, timezone
+from datetime import datetime, date
 from pathlib import Path
 import sqlite3
+
+
+class _Queries:
+    def __init__(self):
+        """Each "foo.sql" in "sql/" sets the attribute "foo" on this object to
+        a string that is the contents of "sql/foo.sql".
+
+        So, the SQL queries that this module makes will be the `.foo` or
+        `.bar` of some `_Queries` instance.
+        """
+        for path in (Path(__file__).parent.absolute() / 'sql').iterdir():
+            setattr(self, path.stem, path.read_text())
+
+
+_queries = _Queries()
 
 
 _database_connection = None
@@ -13,12 +28,8 @@ def database():
     if _database_connection is not None:
         return _database_connection
 
-    db_path = Path('database.sqlite3')
-    init_script_path = Path(__file__).parent.absolute() / 'tables.sql'
-
-    db = sqlite3.connect(db_path)
-    script_sql = init_script_path.read_text()
-    db.executescript(script_sql)
+    db = sqlite3.connect('database.sqlite3')
+    db.executescript(_queries.tables)
     db.execute("pragma foreign_keys = on")
 
     _database_connection = db
@@ -91,15 +102,36 @@ def update_popup_settings(args):
     values(?, ?, ?, ?, ?, ?)
     """
 
-    # Keep the "naive" part of the UTC datetime, but ditch the zone.
-    inserted = datetime.now(timezone.utc).replace(tzinfo=None)
+    # Assumed-local (i.e. "naive" no-timezone) datetime
+    inserted = datetime.now()
 
     db.execute(statement, (inserted, width, height, left, top, openAutomatically))
     db.commit()
 
 
-def select_events(begin_datetime, end_datetime):
-    """TODO"""
+def select_maximal_time_range():
+    (least, most), = database().execute(_queries.range)
+
+    if least is not None:
+        least = datetime.fromisoformat(least)
+    if most is not None:
+        most = datetime.fromisoformat(most)
+
+    return least, most
+
+
+def select_durations(begin_datetime, end_datetime):
+    db = database()
+    cursor = db.execute(_queries.durations, (begin_datetime, end_datetime))
+    result = []
+    for begin, end, activity, milliseconds in cursor:
+        result.append((
+            datetime.fromisoformat(begin),
+            datetime.fromisoformat(end),
+            activity,
+            milliseconds))
+
+    return result
 
 
 def insert_event(type_name, activity_name):
@@ -109,8 +141,8 @@ def insert_event(type_name, activity_name):
     values(?, ?, ?)
     """
 
-    # Keep the "naive" part of the UTC datetime, but ditch the zone.
-    inserted = datetime.now(timezone.utc).replace(tzinfo=None)
+    # Assumed-local (i.e. "naive" no-timezone) datetime
+    inserted = datetime.now()
 
     db.execute(statement, (inserted, type_name, activity_name))
     db.commit()

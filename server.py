@@ -1,7 +1,9 @@
-"""TODO"""
+"""HTTP server for the Panopticon website"""
 
+import export
 import storage
 
+from datetime import date
 import http.server
 import json
 import re
@@ -62,9 +64,33 @@ class RequestHandler(http.server.SimpleHTTPRequestHandler):
         self.send_popup_settings()
 
     def handle_GET_csv(self):
-        print('TODO: print the things')
-        self.send_response(200)
-        self.end_headers()
+        """Create a CSV file of duration data, and respond as if the client had
+        asked for that file (which will remain on disk). 
+        """
+        parsed_url = urllib.parse.urlparse(self.path)
+        if re.match(r'^/csv/[^?].*', parsed_url.path):
+            # This path has more than just "/csv/?..." in it. It's the path to
+            # some file under "csv/", so let the default handler serve it.
+            return super().do_GET()
+
+        # Otherwise, figure out what date range of results the client wants.
+        query_string = parsed_url.query
+        query_parameters = urllib.parse.parse_qs(query_string)
+    
+        begin = query_parameters.get('from', [None])[0]
+        end = query_parameters.get('to', [None])[0]
+
+        begin = None if begin is None else date.fromisoformat(begin)
+        end = None if end is None else date.fromisoformat(end)
+
+        debug({'begin': begin, 'end': end})
+
+        # `create_durations_csv` will return a relative path (without a
+        # leading "./") to the generated CSV file. Prepend a "/" to make
+        # it a path as would be requested by the client.
+        self.path = urllib.parse.quote('/' + export.durations_csv(begin, end))
+        self.requestline = f'GET {self.path} HTTP/1.1'
+        return super().do_GET()
 
     def handle_GET_launch(self):
         self.send_popup_settings()

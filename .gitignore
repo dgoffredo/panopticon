@@ -1,2 +1,7 @@
 /database.sqlite3
 __pycache__/
+
+# ignore everything under csv/ except for empty.csv
+!csv/
+csv/*
+!csv/empty.csv

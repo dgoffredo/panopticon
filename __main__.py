@@ -1,4 +1,4 @@
-"""TODO"""
+"""Serve the Panopticon website."""
 
 import server
 import json
