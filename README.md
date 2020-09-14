@@ -67,11 +67,28 @@ Navigate to the printed URL:
 
 Click "Save & Launch Popup" to launch the activity status indicator:
 
-<img src="images/demo.png" alt="screenshot of activity status indicator" />
+<img src="images/demo.png" width="150" alt="screenshot of activity status indicator" />
 
 Then click the button that describes your current status. Click again to unset.
 
 I like to set the window "always on top" in some out-of-the-way part of my
 secondary monitor.
 
+More
+----
+I'm going to use [d3][2] for data visualization on the main page, but not yet.
+
+For now, you can use the main page's CSV export feature, or if you want a quick
+total of time spent, you can use the hack in the [scratch](scratch/) directory:
+```console
+$ cd scratch
+$ make BEGIN=2020-09-01 END=2020-10-01
+```
+That will use the [sqlite3][3] command line tool and [gnuplot][4] to produce
+a bar graph SVG file, and then open it in [firefox][5].
+
 [1]: https://timeular.com/
+[2]: https://d3js.org/
+[3]: https://sqlite.org/cli.html
+[4]: http://www.gnuplot.info/
+[5]: https://www.mozilla.org/en-US/firefox/
